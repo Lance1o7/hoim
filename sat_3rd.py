@@ -13,6 +13,7 @@ from tqdm import tqdm
 from os.path import join
 from sat_problems import load_sat
 
+
 def exp(dir, csp, num_samples, num_cycles, rho, d, coupling_const, shil, omega,
         num_steps, unsat, annealing, num_problem_vars,
         kuramoto, normalize, seed, **kwargs):
@@ -44,6 +45,7 @@ def exp(dir, csp, num_samples, num_cycles, rho, d, coupling_const, shil, omega,
     data['step'] = jnp.concatenate([jnp.arange(num_steps) for _ in range(num_samples)])
     data['sample'] = jnp.concatenate([jnp.array([i] * num_steps) for i in range(num_samples)])
     data.update({'valid': valid})
+    print(valid)
     if kuramoto:
         energy = jnp.array([m.energy(sample) for sample in samples])
     else:
@@ -64,11 +66,11 @@ if __name__ == '__main__':
 
     # Problem params
     results_dir = 'results/sat_3rd'
-    problems_dir = '/home/connor/repositories/hoim/sat'
+    problems_dir = './sat'
 
     n_instances = 2
     instance_start = 1
-    problems = [f'uf{p}-0{i}.cnf' for p in [20] for i in range(instance_start, instance_start + n_instances)]
+    problems = [f for dp, dn, filenames in os.walk(problems_dir) for f in filenames]
     
     csps = [load_sat(join(problems_dir, problem)) for problem in problems]
 
